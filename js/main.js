@@ -1,6 +1,6 @@
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.0.0/dist/umd/supabase.js";
 
-// Supabase 配置（确保替换成你自己的项目 URL 和 API Key）
+// Supabase 配置（替换为你自己的 URL 和 Key）
 const SUPABASE_URL = "https://cgfzogwhglbvgfppyhpc.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_srnrQzpnFTlsVaCTylDm3A_mzheWcyv";
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -8,12 +8,14 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 // 获取页面元素
 const loginBtn = document.getElementById("login-btn");
 const logoutBtn = document.getElementById("logout-btn");
+const fileInput = document.getElementById("fileInput");  // 获取文件上传输入框
+const searchInput = document.getElementById("search");  // 获取搜索框
+const fileListEl = document.getElementById("fileList");  // 获取文件展示区域
 
 // 当前用户信息
 let currentUser = null;
 
-// 登录函数
-// 使用邮箱和密码登录
+// 登录函数（使用邮箱和密码登录）
 async function login() {
   const { user, error } = await supabase.auth.signIn({
     email: 'user@example.com', // 输入你的邮箱
@@ -27,10 +29,9 @@ async function login() {
     loginBtn.style.display = "none";
     logoutBtn.style.display = "inline-block";
     alert("登录成功！");
-    loadFiles();
+    loadFiles();  // 登录后加载文件
   }
 }
-
 
 // 登出函数
 async function logout() {
@@ -39,15 +40,12 @@ async function logout() {
   loginBtn.style.display = "inline-block";
   logoutBtn.style.display = "none";
   alert("已登出");
-  loadFiles(); // 登出后重新加载文件
+  loadFiles();  // 登出后重新加载文件
 }
 
 // 为登录按钮绑定点击事件
 loginBtn.addEventListener("click", login);
 logoutBtn.addEventListener("click", logout);
-
-// 文件上传逻辑（省略此处的上传代码）
-
 
 // 上传文件
 fileInput.addEventListener("change", async (e) => {
@@ -80,7 +78,8 @@ fileInput.addEventListener("change", async (e) => {
     ]);
 
     alert("✅ 上传成功！");
-    loadFiles();
+    loadFiles();  // 上传成功后重新加载文件列表
+  }
 });
 
 // 加载文件列表并显示上传者信息
@@ -98,7 +97,7 @@ async function loadFiles() {
   // 加载上传者信息
   const { data: uploads } = await supabase.from("uploads").select("*");
 
-  renderFiles(files, uploads);
+  renderFiles(files, uploads);  // 渲染文件列表
 }
 
 // 渲染文件列表
@@ -128,6 +127,13 @@ function openViewer(filename) {
   window.location.href = `viewer.html?file=${encodeURIComponent(filename)}`;
 }
 
+// 监听搜索框输入事件
 searchInput.addEventListener("input", loadFiles);
+
+// 页面加载时，初始化文件列表
 loadFiles();
 
+// 函数：文件名清理
+function sanitizeFileName(fileName) {
+  return fileName.replace(/[^a-zA-Z0-9._-]/g, "_");  // 替换不合法字符
+}
