@@ -1,23 +1,23 @@
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.0.0/dist/umd/supabase.js";
 
+// Supabase 配置（确保替换成你自己的项目 URL 和 API Key）
 const SUPABASE_URL = "https://cgfzogwhglbvgfppyhpc.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_srnrQzpnFTlsVaCTylDm3A_mzheWcyv";
-
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // 获取页面元素
-const fileInput = document.getElementById("fileInput");
-const fileListEl = document.getElementById("fileList");
-const searchInput = document.getElementById("search");
 const loginBtn = document.getElementById("login-btn");
 const logoutBtn = document.getElementById("logout-btn");
 
+// 当前用户信息
 let currentUser = null;
 
-// 登录
+// 登录函数
+// 使用邮箱和密码登录
 async function login() {
   const { user, error } = await supabase.auth.signIn({
-    provider: 'google',  // 你也可以使用 email/password 认证
+    email: 'user@example.com', // 输入你的邮箱
+    password: 'password' // 输入密码
   });
 
   if (error) {
@@ -27,11 +27,12 @@ async function login() {
     loginBtn.style.display = "none";
     logoutBtn.style.display = "inline-block";
     alert("登录成功！");
-    loadFiles(); // 登录后加载文件
+    loadFiles();
   }
 }
 
-// 登出
+
+// 登出函数
 async function logout() {
   await supabase.auth.signOut();
   currentUser = null;
@@ -40,6 +41,13 @@ async function logout() {
   alert("已登出");
   loadFiles(); // 登出后重新加载文件
 }
+
+// 为登录按钮绑定点击事件
+loginBtn.addEventListener("click", login);
+logoutBtn.addEventListener("click", logout);
+
+// 文件上传逻辑（省略此处的上传代码）
+
 
 // 上传文件
 fileInput.addEventListener("change", async (e) => {
