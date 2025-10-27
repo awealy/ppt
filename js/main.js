@@ -49,25 +49,23 @@ logoutBtn.addEventListener("click", logout);
 
 // 上传文件
 fileInput.addEventListener("change", async (e) => {
-  const file = e.target.files[0];
+  const file = e.target.files[0];  // 获取上传的文件
   if (!file || !currentUser) {
     alert("请先登录");
     return;
   }
 
-  const sanitizedFileName = sanitizeFileName(file.name);
+  const sanitizedFileName = sanitizeFileName(file.name);  // 清理文件名
 
-  // 上传文件
+  // 上传文件到 Supabase Storage
   const { data, error } = await supabase.storage
-    .from("ppt-files")
-    .upload(`${Date.now()}_${sanitizedFileName}`, file, {
-      upsert: true
-    });
+    .from("ppt-files")  // 选择存储桶
+    .upload(`${Date.now()}_${sanitizedFileName}`, file, { upsert: true });
 
   if (error) {
     alert("上传失败: " + error.message);
   } else {
-    // 保存上传者信息
+    // 保存上传者信息到数据库
     await supabase.from("uploads").insert([
       {
         file_name: sanitizedFileName,
@@ -78,9 +76,10 @@ fileInput.addEventListener("change", async (e) => {
     ]);
 
     alert("✅ 上传成功！");
-    loadFiles();  // 上传成功后重新加载文件列表
+    loadFiles();  // 上传完成后加载文件
   }
 });
+
 
 // 加载文件列表并显示上传者信息
 async function loadFiles() {
