@@ -3,31 +3,48 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PPT 在线展示</title>
+  <title>PPT & PDF 在线展示</title>
   <link rel="stylesheet" href="css/style.css" />
-  <script type="module" src="js/main.js" defer></script>
 </head>
 <body>
+  <!-- 顶部导航栏 -->
   <header>
-    <h1>PPT & PDF 在线展示</h1>
-    <div id="auth">
-      <button id="login-btn" onclick="login()">登录</button>
-      <button id="logout-btn" style="display: none;" onclick="logout()">登出</button>
+    <div class="container">
+      <h1>PPT & PDF 在线展示</h1>
+      <div id="auth">
+        <button id="login-btn" class="auth-btn">登录</button>
+        <button id="logout-btn" class="auth-btn" style="display: none;">登出</button>
+      </div>
     </div>
-    <input id="search" type="text" placeholder="🔍 搜索文件..." />
   </header>
 
+  <!-- 主体内容区域 -->
   <main>
-    <div class="upload-card">
-      <label class="upload-btn">
-        ⬆️ 上传文件
+    <div class="container">
+      <!-- 文件上传区域 -->
+      <div class="upload-card">
+        <label for="fileInput" class="upload-btn">
+          ⬆️ 上传文件
+        </label>
         <input type="file" id="fileInput" accept=".ppt,.pptx,.pdf" hidden />
-      </label>
-    </div>
+      </div>
 
-    <div id="fileList" class="file-list"></div>
+      <!-- 文件搜索框 -->
+      <div class="search-container">
+        <input id="search" type="text" class="search-input" placeholder="🔍 搜索文件..." />
+      </div>
+
+      <!-- 文件列表展示 -->
+      <div id="fileList" class="file-list"></div>
+    </div>
   </main>
 
-  <footer>© 2025 awealy | 极简文件展示平台</footer>
+  <!-- 底部版权 -->
+  <footer>
+    <p>© 2025 awealy | 极简文件展示平台</p>
+  </footer>
+
+  <!-- 引入 main.js，确保在页面加载完成后执行 -->
+  <script type="module" src="js/main.js" defer></script>
 </body>
 </html>
