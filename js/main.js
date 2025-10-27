@@ -10,13 +10,23 @@ const fileListEl = document.getElementById("fileList");
 const searchInput = document.getElementById("search");
 
 // 上传文件
+function sanitizeFileName(fileName) {
+  return fileName
+    .replace(/ /g, '_')  // 替换空格为下划线
+    .replace(/[^\w\-\.]/g, '')  // 移除其他特殊字符，保留字母、数字、下划线、连字符
+    .toLowerCase();  // 统一转小写（可选）
+}
+
 fileInput.addEventListener("change", async (e) => {
   const file = e.target.files[0];
   if (!file) return;
 
+  // 格式化文件名
+  const sanitizedFileName = sanitizeFileName(file.name);
+
   const { data, error } = await supabase.storage
     .from("ppt-files")
-    .upload(`${Date.now()}_${file.name}`, file, { upsert: true });
+    .upload(`${Date.now()}_${sanitizedFileName}`, file, { upsert: true });
 
   if (error) {
     alert("上传失败: " + error.message);
@@ -25,6 +35,7 @@ fileInput.addEventListener("change", async (e) => {
     loadFiles();
   }
 });
+
 
 // 加载文件列表
 async function loadFiles() {
