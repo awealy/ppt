@@ -1,50 +1,63 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PPT & PDF 在线展示</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>物华弥新 · 彩凤归巢 — PPT 在线库</title>
   <link rel="stylesheet" href="css/style.css" />
+  <script type="module" src="js/main.js" defer></script>
 </head>
 <body>
-  <!-- 顶部导航栏 -->
-  <header>
-    <div class="container">
-      <h1>PPT & PDF 在线展示</h1>
-      <div id="auth">
-        <button id="login-btn" class="auth-btn">登录</button>
-        <button id="logout-btn" class="auth-btn" style="display: none;">登出</button>
+  <div class="page">
+    <nav class="nav">
+      <div class="brand">
+        <div class="logo-mark" aria-hidden></div>
+        <div>
+          <div class="brand-title">物华弥新</div>
+          <div class="brand-sub">彩凤鸣岐 · PPT 在线库</div>
+        </div>
       </div>
-    </div>
-  </header>
 
-  <!-- 主体内容区域 -->
-  <main>
-    <div class="container">
-      <!-- 文件上传区域 -->
-      <div class="upload-card">
-        <label for="fileInput" class="upload-btn">
-          ⬆️ 上传文件
+      <div class="nav-right">
+        <div id="user-info" class="user-info">
+          <span id="user-email" class="user-email"></span>
+          <button id="logout-btn" class="btn small" style="display:none">登出</button>
+        </div>
+        <button id="login-btn" class="btn primary">登录 / 注册</button>
+      </div>
+    </nav>
+
+    <main class="container">
+      <section class="intro-card">
+        <h2>关于 · 彩凤鸣岐</h2>
+        <p>
+          以“彩凤鸣岐”为视觉线索，界面使用绛紫与金砂的配色，追求简洁与优雅。
+          在这里你可以上传 PPT / PDF，在线预览并分享。上传时会记录上传者（需登录）。
+        </p>
+      </section>
+
+      <section class="controls">
+        <label class="upload-area">
+          <input id="fileInput" type="file" accept=".pdf,.ppt,.pptx" />
+          <div class="upload-hint">
+            ⬆️ 点击或拖拽上传 PPT / PDF
+            <div class="sub">文件名会被清理以兼容存储路径</div>
+          </div>
         </label>
-        <input type="file" id="fileInput" accept=".ppt,.pptx,.pdf" hidden />
-      </div>
 
-      <!-- 文件搜索框 -->
-      <div class="search-container">
-        <input id="search" type="text" class="search-input" placeholder="🔍 搜索文件..." />
-      </div>
+        <div class="search-wrap">
+          <input id="search" placeholder="搜索文件或上传者..." />
+        </div>
+      </section>
 
-      <!-- 文件列表展示 -->
-      <div id="fileList" class="file-list"></div>
-    </div>
-  </main>
+      <section id="fileList" class="file-grid" aria-live="polite">
+        <!-- file cards injected here -->
+      </section>
+    </main>
 
-  <!-- 底部版权 -->
-  <footer>
-    <p>© 2025 awealy | 极简文件展示平台</p>
-  </footer>
-
-  <!-- 引入 main.js，确保在页面加载完成后执行 -->
-  <script type="module" src="js/main.js" defer></script>
+    <footer class="footer">
+      <div>© 2025 awealy — 风格灵感：彩凤鸣岐</div>
+    </footer>
+  </div>
 </body>
 </html>
