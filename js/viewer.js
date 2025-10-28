@@ -1,35 +1,31 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-const SUPABASE_URL = "https://cqmusijxss.supabase.co";
-const SUPABASE_ANON_KEY = "sb_publishable_5sT9N2eNdgeah_8xlpSnTQ_PGbNDpr9";
+const SUPABASE_URL = "https://cgfzogwhglbvgfppyhpc.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_srnrQzpnFTlsVaCTylDm3A_mzheWcyv";
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-const viewerEl = document.getElementById("viewer");
-const titleEl = document.getElementById("fileTitle");
+const params = new URLSearchParams(location.search);
+const file = params.get("file");
+const root = document.getElementById("viewerArea");
 
-const urlParams = new URLSearchParams(window.location.search);
-const fileName = urlParams.get("file");
-titleEl.textContent = fileName || "未知文件";
-
-if (!fileName) {
-  viewerEl.innerHTML = "<p>❌ 未指定文件。</p>";
+if (!file) {
+  root.innerHTML = '<div style="padding:24px;color:#b00">未指定文件</div>';
 } else {
-  loadFile(fileName);
-}
-
-async function loadFile(name) {
-  const { data } = await supabase.storage.from("ppt-files").getPublicUrl(name);
-  const fileUrl = data.publicUrl;
-
-  if (name.endsWith(".pdf")) {
-    // 直接使用 PDF.js
-    const viewerURL = `https://mozilla.github.io/pdf.js/web/viewer.html?file=${encodeURIComponent(fileUrl)}`;
-    viewerEl.innerHTML = `<iframe src="${viewerURL}" width="100%" height="800px"></iframe>`;
-  } else if (name.endsWith(".ppt") || name.endsWith(".pptx")) {
-    // 使用微软 Office 在线预览
-    const viewerURL = `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(fileUrl)}`;
-    viewerEl.innerHTML = `<iframe src="${viewerURL}" width="100%" height="800px"></iframe>`;
+  const name = decodeURIComponent(file);
+  // get public url
+  const { data } = supabase.storage.from("ppt-files").getPublicUrl(name);
+  const url = data?.publicUrl;
+  if (!url) {
+    root.innerHTML = `<div style="padding:24px;color:#b00">无法获取文件链接</div>`;
   } else {
-    viewerEl.innerHTML = `<p>⚠️ 暂不支持的文件类型。</p>`;
+    if (name.toLowerCase().endsWith(".pdf")) {
+      // embed via PDF.js viewer hosted (quick way)
+      const viewer = `https://mozilla.github.io/pdf.js/web/viewer.html?file=${encodeURIComponent(url)}`;
+      root.innerHTML = `<iframe src="${viewer}" style="width:100%;height:80vh;border:0"></iframe>`;
+    } else {
+      // ppt/pptx -> use office viewer embed
+      const viewer = `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(url)}`;
+      root.innerHTML = `<iframe src="${viewer}" style="width:100%;height:80vh;border:0"></iframe>`;
+    }
   }
 }
